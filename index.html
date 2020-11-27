@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Leaderboard</title>
+	<script type="text/javascript" src="jquery-3.5.1.min.js"></script>
+<style type="text/css">
+html, body, div, figure, p, h1, h2, ul, li, input, button, textarea {margin:0; padding:0; box-sizing: border-box; font-family: sans-serif;}
+body {background-color: #9b8975; padding: 0 20%;}
+h1 {padding:30px 0; text-align: center; font-size: 50px; color: #fff8dc;}
+.leaderboard {list-style: none;}
+.leaderboard .person {background-color: #2d3e50; padding: 0 0 0 70px; width: 100%; height: 70px; margin-bottom: 12px; overflow: hidden; position: relative;}
+.leaderboard .person .icon {position: absolute; top: 0; left: 0; font-size: 50px; line-height: 70px; background: #fff8dc;}
+.leaderboard .person .nickname {padding: 0 0 0 10px; font-size: 30px; line-height: 70px; color: #fff;}
+.leaderboard .person .score {position: absolute; top: 0; right: 0; font-size: 50px; line-height: 70px; background: #dc3546; color: #fff; width: 120px; text-align: center; z-index: 10; cursor: pointer;}
+.leaderboard .person.open .point-btns { right: 120px; }
+.leaderboard .person .point-btns {position: absolute; list-style: none; top: 0; right: -100%; height: 100%; font-size: 0; transition: right 0.5s ease-out; z-index: 1;}
+.leaderboard .person .point-btns .point-btn {display: inline-block; height: 100%; width: 70px; background-color: #ccc; font-size: 30px; text-align: center; line-height: 70px; cursor: pointer;}
+.leaderboard .person .point-btns .point-btn--1 {background: #efd68d; color: #a79255;}
+.leaderboard .person .point-btns .point-btn--2 {background: #f7ce52; color: #9a802f;}
+.leaderboard .person .point-btns .point-btn--5 {background: #fec107; color: #735d1a;}
+.leaderboard .person .point-btns .point-btn-1 {background: #5ace72; color: #bef5ca;}
+.leaderboard .person .point-btns .point-btn-2 {background: #3dc159; color: #a0efb1;}
+.leaderboard .person .point-btns .point-btn-5 {background: #29a744; color: #a0efb1; border-right: 2px solid #1e9237;}
+
+.add-person {position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; border-radius: 50%; background: #17a2b9; line-height: 50px; text-align: center; font-size: 40px; color: #fff; cursor: pointer;}
+.add-person-popup {display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; background-color: rgb(0 0 0 / 70%);}
+body.show-add-person .add-person-popup {display: block;}
+body.show-add-person {overflow: hidden;}
+.add-person-popup .box {display: inline-block; height: 500px; width: 500px; background: #353a40; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 6px dashed #fff8dc; text-align:center;}
+.add-person-popup .box .random-icon {width: 200px; height: 200px; font-size: 100px; line-height: 200px; background: #fff; display: inline-block; border-radius: 50%; margin: 25px 0; border: none; padding: 0; text-align: center; color: #000;}
+.add-person-popup .box input {height: 60px; line-height: 50px; font-size: 50px; border: none; background: #9b8975; color: #fff; text-align: center; width: 95%; margin-bottom: 10px;}
+.add-person-popup .box input::-webkit-input-placeholder {color: #7d6c59;}
+.add-person-popup .box #score {width: 250px;}
+.add-person-popup .box button {cursor: pointer; text-align: center; position: absolute; bottom: 0; width: 50%; height: 60px; border: none; font-size: 25px; font-weight: 700; color: #fff;} 
+.add-person-popup .box button.ok {right: 0; background: #29a744;}
+.add-person-popup .box button.cancel {left: 0; background: #1b252f;}
+
+.edit {position: fixed; bottom: 30px; right: 90px; width: 50px; height: 50px; line-height: 50px; text-align: center; font-size: 40px; color: #fff; cursor: pointer;}
+.edit-popup {display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; background-color: rgb(0 0 0 / 70%);}
+body.show-edit .edit-popup {display: block;}
+body.show-edit {overflow: hidden;}
+.edit-popup .box {display: inline-block; height: 500px; width: 500px; background: #353a40; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 6px dashed #fff8dc; text-align:center;}
+.edit-popup .box textarea {width: 100%; background: #353a40; box-sizing: border-box; font-size: 20px; color: #fff; border: none; padding: 15px; height: calc(100% - 60px);}
+.edit-popup .box button {cursor: pointer; text-align: center; position: absolute; bottom: 0; width: 50%; height: 60px; border: none; font-size: 25px; font-weight: 700; color: #fff;} 
+.edit-popup .box button.ok {right: 0; background: #29a744;}
+.edit-popup .box button.cancel {left: 0; background: #1b252f;}
+</style>
+</head>
+<body>
+	<h1>Leaderboard</h1>
+	<ul class="leaderboard">
+		<!-- place for persons / isotope plugin -->
+	</ul>
+	<div class="add-person-popup">
+		<div class="box">
+			<input type="text" id="rand-icon" class="random-icon" value="🦊">
+			<br>
+			<input type="text" id="nickname" size="15" placeholder="Nickname">
+			<br>
+			<input type="number" id="score" placeholder="score">
+			<br>
+			<button class="cancel">CANCEL</button>
+			<button class="ok">OK</button>
+		</div>
+	</div>
+	<div class="edit-popup">
+		<div class="box">
+			<textarea id="tarea"></textarea>
+			<button class="cancel">CANCEL</button>
+			<button class="ok">OK</button>
+		</div>
+	</div>
+
+	<div class="add-person">+</div>
+	<div class="edit">📋</div>
+
+
+<script type="text/javascript" src="isotope-v3.0.6.pkgd.min.js"></script>
+<script type="text/javascript">
+var leaderboard_iso = null;
+var data            = [];
+var emojis          = "🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯 🦁 🐮 🐷 🐽 🐸 🐵 🙈 🙉 🙊 🐒 🐔 🐧 🐦 🐤 🐣 🐥 🦆 🦅 🦉 🦇 🐺 🐗 🐴 🦄 🐝 🐛 🦋 🐌 🐞 🐜 🦟 🦗 🕷 🕸 🦂 🐢 🐍 🦎 🦖 🦕 🐙 🦑 🦐 🦞 🦀 🐡 🐠 🐟 🐬 🐳 🐋 🦈 🐊 🐅 🐆 🦓 🦍 🦧 🐘 🦛 🦏 🐪 🐫 🦒 🦘 🐃 🐂 🐄 🐎 🐖 🐏 🐑 🦙 🐐 🦌 🐕 🐩 🦮 🐕‍🦺 🐈 🐓 🦃 🦚 🦜 🦢 🦩 🐇 🦝 🦨 🦡 🦦 🦥 🐁 🐀 🦔".split(" ");
+var template        = `
+<li class="person">
+	<p class="icon">{{icon}}</p>
+	<p class="nickname">{{nickname}}</p>
+	<p class="score">{{score}}</p>
+	<ul class="point-btns">
+		<li class="point-btn point-btn--5" data-points-value="-5">-5</li>
+		<li class="point-btn point-btn--2" data-points-value="-2">-2</li>
+		<li class="point-btn point-btn--1" data-points-value="-1">-1</li>
+		<li class="point-btn point-btn-1" data-points-value="1">+1</li>
+		<li class="point-btn point-btn-2" data-points-value="2">+2</li>
+		<li class="point-btn point-btn-5" data-points-value="5">+5</li>
+	</ul>
+</li>
+`;
+
+$( document ).ready(function() {
+	leaderboard_iso = $('.leaderboard').isotope({
+		// options
+		itemSelector: '.person',
+		layoutMode: 'vertical',
+		getSortData: {
+			score: '.score parseInt'
+		}
+	});
+	// sort_leaderboard();
+	initialize_basic_btn_listeners();
+});
+
+function sort_leaderboard(){
+	leaderboard_iso.isotope( 'updateSortData');
+	leaderboard_iso.isotope({ sortBy: "score", sortAscending : false });
+}
+
+
+
+function initialize_basic_btn_listeners() {
+	
+	// adding a new person listeners
+	//
+	$('.add-person').on('click',function(){
+		$("body").toggleClass("show-add-person");
+		// pick random animal emoji and clear form
+		$('#rand-icon').val(emojis[getRandomInt(0,emojis.length)]);
+		$('#nickname').val("");
+		$('#score').val("");
+	});
+
+	$('.add-person-popup .cancel').on('click',function(){
+		$("body").toggleClass("show-add-person");
+	});
+
+	$('.add-person-popup .ok').on('click',function(){
+		var new_person = {
+			icon:    $('#rand-icon').val(),
+			nickname: $('#nickname').val(),
+			score:    $('#score').val()
+		};
+		data.push(new_person);
+		build_leaderboard();
+		$("body").toggleClass("show-add-person");
+	});
+
+
+	// editing
+	// 
+	$('.edit').on('click',function(){
+		$("body").toggleClass("show-edit");
+		// load data to textarea
+		data_str = "";
+		data.forEach(function(person) {
+			data_str = data_str + (person.icon + "," + person.nickname + "," + person.score + "\n");
+		});
+		$("#tarea").val(data_str);
+	});
+
+	$('.edit-popup .cancel').on('click',function(){
+		$("body").toggleClass("show-edit");
+	});
+
+	$('.edit-popup .ok').on('click',function(){
+		data = read_data_from_text( $('#tarea').val().trim() );
+		build_leaderboard();
+		$("body").toggleClass("show-edit");
+	});
+}
+
+
+
+function initialize_person_btn_listeners() {
+	$('.person .score').on('click',function(){
+		$(this).parent().toggleClass("open");
+	});
+
+	// +/- points buttons
+	// also updates data[]
+	$('.point-btn').on('click', async function(event){
+		event.stopPropagation();
+		var $li            = $(this).parent().parent();
+		var $score         = $li.find('.score');
+		var current_score  = parseInt( $score.text() );
+		var points_clicked = parseInt($(this).attr('data-points-value'));
+		var target_score   = current_score + points_clicked;
+
+		// update UI
+		if (target_score > current_score) {
+			for (i=current_score ; i<=target_score ; i++) {
+				$score.text(i);
+				await sleep(150);
+			}
+		} else {
+			for (i=current_score ; i>=target_score ; i--) {
+				$score.text(i);
+				await sleep(150);
+			}
+		}
+		sort_leaderboard();
+
+		// update data[]
+		data.forEach(function(person) {
+			if ((person.nickname == $li.find('.nickname').text()) && (person.icon == $li.find('.icon').text())) {
+				person.score = target_score;
+			}
+		})
+	});
+}
+
+function build_leaderboard() {
+	// remove all current list items
+	$('.leaderboard').empty();
+
+	// append all person-list-items
+	data.forEach(function(person) {
+		$('.leaderboard').append(
+			template.replace(/{{icon}}/gm,person.icon)
+					.replace(/{{nickname}}/gm,person.nickname)
+					.replace(/{{score}}/gm,person.score));
+	})
+
+	// reload isotope
+	leaderboard_iso.isotope('reloadItems');
+
+	// add button listeners for score +/-
+	initialize_person_btn_listeners();
+	sort_leaderboard();
+}
+
+function read_data_from_text(data_str) {
+	data = [];
+	var lines = data_str.split('\n');
+	lines.forEach(function(line) {
+		tokens = line.split(',');
+		data.push({
+			icon:     tokens[0],
+			nickname: tokens[1],
+			score:    tokens[2]
+		});
+	});
+	return data;
+}
+
+
+
+
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * Returns a random number between min (inclusive) and max (exclusive)
+ */
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+/**
+ * Returns a random integer between min (inclusive) and max (inclusive).
+ * The value is no lower than min (or the next integer greater than min
+ * if min isn't an integer) and no greater than max (or the next integer
+ * lower than max if max isn't an integer).
+ * Using Math.round() will give you a non-uniform distribution!
+ */
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+</script>
+</body>
+</html>
