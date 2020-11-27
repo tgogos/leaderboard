@@ -109,6 +109,16 @@ $( document ).ready(function() {
 	});
 	// sort_leaderboard();
 	initialize_basic_btn_listeners();
+
+	// check for data in "URLSearchParams"
+	url = new URL((window.location.href));
+	query_string = url.searchParams.get("q");
+	if (query_string != null) {
+		decoded_str = decodeURIComponent(window.atob(query_string));
+		data = JSON.parse(decoded_str);
+	}
+	build_leaderboard();
+
 });
 
 function sort_leaderboard(){
@@ -123,6 +133,7 @@ function initialize_basic_btn_listeners() {
 	// adding a new person listeners
 	//
 	$('.add-person').on('click',function(){
+		scroll_to_top_smooth();
 		$("body").toggleClass("show-add-person");
 		// pick random animal emoji and clear form
 		$('#rand-icon').val(emojis[getRandomInt(0,emojis.length)]);
@@ -149,6 +160,7 @@ function initialize_basic_btn_listeners() {
 	// editing
 	// 
 	$('.edit').on('click',function(){
+		scroll_to_top_smooth();
 		$("body").toggleClass("show-edit");
 		// load data to textarea
 		data_str = "";
@@ -269,6 +281,22 @@ function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function generate_share_link() {
+	// encode to BASE64 the data object
+	base64_str = btoa(encodeURIComponent(JSON.stringify(data)));
+
+	share_url = new URL((window.location.href));
+	share_url.searchParams.append("q",base64_str)
+	console.log(share_url.href);
+}
+
+function scroll_to_top_smooth() {
+	window.scrollTo({
+		top: 0,
+		behavior: 'smooth'
+	});
 }
 </script>
 </body>
