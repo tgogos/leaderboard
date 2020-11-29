@@ -161,13 +161,14 @@ $( document ).ready(function() {
 	// check for data in the local storage
 	if (local_storage_available) {
 		data = JSON.parse(localStorage.getItem('leaderboard_data'));
+		
 		// add data to the UI
-		build_leaderboard();
-	}	
-
-
-	
-
+		if (data != null) {
+			build_leaderboard();
+		} else {
+			data = [];
+		}
+	}
 });
 
 function sort_leaderboard(){
