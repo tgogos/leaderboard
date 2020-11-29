@@ -98,6 +98,7 @@ body.show-link {overflow: hidden;}
 <script type="text/javascript" src="isotope-v3.0.6.pkgd.min.js"></script>
 <script type="text/javascript">
 var leaderboard_iso = null;
+var local_storage_available = false;
 var data            = [];
 var emojis          = "🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯 🦁 🐮 🐷 🐽 🐸 🐵 🙈 🙉 🙊 🐒 🐔 🐧 🐦 🐤 🐣 🐥 🦆 🦅 🦉 🦇 🐺 🐗 🐴 🦄 🐝 🐛 🦋 🐌 🐞 🐜 🦟 🦗 🕷 🕸 🦂 🐢 🐍 🦎 🦖 🦕 🐙 🦑 🦐 🦞 🦀 🐡 🐠 🐟 🐬 🐳 🐋 🦈 🐊 🐅 🐆 🦓 🦍 🦧 🐘 🦛 🦏 🐪 🐫 🦒 🦘 🐃 🐂 🐄 🐎 🐖 🐏 🐑 🦙 🐐 🦌 🐕 🐩 🦮 🐕‍🦺 🐈 🐓 🦃 🦚 🦜 🦢 🦩 🐇 🦝 🦨 🦡 🦦 🦥 🐁 🐀 🦔".split(" ");
 var template        = `
@@ -117,6 +118,16 @@ var template        = `
 `;
 
 $( document ).ready(function() {
+
+	// check if local storage is available
+	// updates `local_storage_available` variable
+	test_local_storage();
+
+	// some button handlers...
+	initialize_basic_btn_listeners();
+
+
+	// intialize isotope plugin
 	leaderboard_iso = $('.leaderboard').isotope({
 		// options
 		itemSelector: '.person',
@@ -125,17 +136,37 @@ $( document ).ready(function() {
 			score: '.score parseInt'
 		}
 	});
-	// sort_leaderboard();
-	initialize_basic_btn_listeners();
+	
 
+	// 1st step:
 	// check for data in "URLSearchParams"
+	// If the url has data in the query string
+	// give priority to this data
 	url = new URL((window.location.href));
 	query_string = url.searchParams.get("q");
 	if (query_string != null) {
 		decoded_str = decodeURIComponent(window.atob(query_string));
 		data = JSON.parse(decoded_str);
+
+		// save data to local storage
+		// refresh without data in the url
+		if (local_storage_available) {
+			localStorage.setItem('leaderboard_data', JSON.stringify(data));
+			window.location.href = [location.protocol, '//', location.host, location.pathname].join('');
+		}
+		return;
 	}
-	build_leaderboard();
+
+	// 2nd step:
+	// check for data in the local storage
+	if (local_storage_available) {
+		data = JSON.parse(localStorage.getItem('leaderboard_data'));
+		// add data to the UI
+		build_leaderboard();
+	}	
+
+
+	
 
 });
 
@@ -251,6 +282,8 @@ function initialize_person_btn_listeners() {
 				person.score = target_score;
 			}
 		})
+		// save data to local storage
+		localStorage.setItem('leaderboard_data', JSON.stringify(data));
 	});
 }
 
@@ -268,6 +301,9 @@ function build_leaderboard() {
 
 	// reload isotope
 	leaderboard_iso.isotope('reloadItems');
+
+	// save data to local storage
+	localStorage.setItem('leaderboard_data', JSON.stringify(data));
 
 	// add button listeners for score +/-
 	initialize_person_btn_listeners();
@@ -330,6 +366,17 @@ function scroll_to_top_smooth() {
 		top: 0,
 		behavior: 'smooth'
 	});
+}
+
+function test_local_storage(){
+    var test = 'test';
+    try {
+        localStorage.setItem(test, test);
+        localStorage.removeItem(test);
+        local_storage_available = true;
+    } catch(e) {
+        local_storage_available = false;
+    }
 }
 </script>
 </body>
