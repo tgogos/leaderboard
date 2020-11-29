@@ -320,7 +320,7 @@ function generate_share_link() {
 	// encode to BASE64 the data object
 	base64_str = btoa(encodeURIComponent(JSON.stringify(data)));
 
-	share_url = new URL((window.location.href));
+	share_url = new URL( [location.protocol, '//', location.host, location.pathname].join('') );
 	share_url.searchParams.append("q",base64_str)
 	return share_url.href;
 }
