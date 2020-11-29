@@ -225,7 +225,7 @@ function initialize_basic_btn_listeners() {
 	});
 
 	$('.edit-popup .ok').on('click',function(){
-		data = read_data_from_text( $('#tarea').val().trim() );
+		read_data_from_text( $('#tarea').val().trim() );
 		build_leaderboard();
 		$("body").toggleClass("show-edit");
 	});
@@ -292,6 +292,8 @@ function build_leaderboard() {
 	// remove all current list items
 	$('.leaderboard').empty();
 
+	if (data.length == 0) return;
+
 	// append all person-list-items
 	data.forEach(function(person) {
 		$('.leaderboard').append(
@@ -313,6 +315,7 @@ function build_leaderboard() {
 
 function read_data_from_text(data_str) {
 	data = [];
+	if (data_str == "") {return;}
 	var lines = data_str.split('\n');
 	lines.forEach(function(line) {
 		tokens = line.split(',');
@@ -322,7 +325,6 @@ function read_data_from_text(data_str) {
 			score:    tokens[2]
 		});
 	});
-	return data;
 }
 
 
