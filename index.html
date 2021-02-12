@@ -133,6 +133,7 @@ $( document ).ready(function() {
 		itemSelector: '.person',
 		layoutMode: 'vertical',
 		getSortData: {
+			nickname: '.nickname',
 			score: '.score parseInt'
 		}
 	});
@@ -173,7 +174,7 @@ $( document ).ready(function() {
 
 function sort_leaderboard(){
 	leaderboard_iso.isotope( 'updateSortData');
-	leaderboard_iso.isotope({ sortBy: "score", sortAscending : false });
+	leaderboard_iso.isotope({ sortBy: ["score", "nickname"], sortAscending : false });
 }
 
 
@@ -214,6 +215,7 @@ function initialize_basic_btn_listeners() {
 		$("body").toggleClass("show-edit");
 		// load data to textarea
 		data_str = "";
+		data = data.sort( compare ).reverse();
 		data.forEach(function(person) {
 			data_str = data_str + (person.icon + "," + person.nickname + "," + person.score + "\n");
 		});
@@ -381,6 +383,27 @@ function test_local_storage(){
         local_storage_available = false;
     }
 }
+
+function compare(personA, personB) {
+  scoreA = parseInt(personA.score);
+  scoreB = parseInt(personB.score);
+  if (scoreA < scoreB) {
+    return -1;
+  }
+  if (scoreA > scoreB) {
+    return 1;
+  }
+  // but...
+  // if they have the same score -> alphabetically
+  if (personA.nickname < personB.nickname) {
+    return -1;
+  }
+  if (personA.nickname > personB.nickname) {
+    return 1;
+  }
+  return 0;
+}
+
 </script>
 </body>
 </html>
