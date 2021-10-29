@@ -5,6 +5,7 @@
  - Try them both online at:
    - [gogos.me/leaderboard/](https://gogos.me/leaderboard/)
    - [gogos.me/leaderboard-cards/](https://gogos.me/leaderboard-cards/)
+   - alternative codepen links: [leaderboard](https://codepen.io/tgogos/full/qBaEJaa) / [leaderboard-cards](https://codepen.io/tgogos/full/jOMrvmg)
 
 ![overview](/README/overview.gif)
 
