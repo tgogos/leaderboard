@@ -1,8 +1,22 @@
 # leaderboard
 
-Made with ❤️ for friends who were trying to motivate their classes 🧑‍🏫 during COVID-19 lockdowns.
+ - Made with ❤️ for friends who were trying to motivate their classes 🧑‍🏫 during COVID-19 lockdowns.
+ - Use it together with `leaderboard-cards` for more competition & fun!
+ - Try them both online at:
+   - [gogos.me/leaderboard/](https://gogos.me/leaderboard/)
+   - [gogos.me/leaderboard-cards/](https://gogos.me/leaderboard-cards/)
 
 ![overview](/README/overview.gif)
+
+# leaderboard-cards
+
+
+
+<br>
+<br>
+<br>
+
+# Instructions 
 
 ## ❔ How to add new names
 
