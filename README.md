@@ -17,6 +17,11 @@
 
 ![how to use cards](/README/cards.gif)
 
+✔️ add lucky cards that give extra points (or the opposite)  
+✔️ they are randomly placed whenever you refresh the page  
+✔️ press the button to shuffle them a little bit  
+✔️ when you think its needed, ask the user to pick one card  
+
 <br>
 <br>
 <br>
