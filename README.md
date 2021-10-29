@@ -10,9 +10,9 @@ Use the <kbd>➕</kbd> button and a random animal emoji will be selected, then t
 
 ![how to add new names](/README/add_names.gif)
 
-### use every emoji you like
+### 👉 use every emoji you like
 
-There is a predefined list of animals that are randomly chosen when add a new name:
+There is a predefined list of animals that are randomly chosen whenever you add a new name:
 
 ```
 🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯 🦁 🐮 🐷 🐽 🐸 🐵 🙈 🙉 🙊 🐒 🐔 🐧 🐦 🐤 🐣 🐥 🦆 🦅 🦉 🦇 🐺 🐗 🐴 🦄 🐝 🐛
@@ -20,4 +20,6 @@ There is a predefined list of animals that are randomly chosen when add a new na
 🐫 🦒 🦘 🐃 🐂 🐄 🐎 🐖 🐏 🐑 🦙 🐐 🦌 🐕 🐩 🦮 🐕‍🦺 🐈 🐓 🦃 🦚 🦜 🦢 🦩 🐇 🦝 🦨 🦡 🦦 🦥 🐁 🐀 🦔
 ```
 
-but you can use whatever emoji you prefer by just typing it.
+but you can use whatever emoji you prefer by just typing it:
+
+![how to use custom emoji](/README/custom_emoji.gif)
