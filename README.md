@@ -7,3 +7,5 @@ Made with ❤️ for friends who were trying to motivate their classes 🧑‍�
 ## How to add new names
 
 Use the <kbd>➕</kbd> button and a random animal emoji will be selected, then type the name / score and hit <kbd>OK</kbd>
+
+![how to add new names](/README/add_names.gif)
