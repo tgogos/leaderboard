@@ -10,7 +10,7 @@
 
 # leaderboard-cards
 
-
+![how to use cards](/README/cards.gif)
 
 <br>
 <br>
