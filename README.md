@@ -8,6 +8,11 @@
 
 ![overview](/README/overview.gif)
 
+✔️ create a class leaderboard by adding names / scores in a few seconds  
+✔️ change the score by adding or removing points with the appropriate buttons  
+✔️ see the live updates as the players compete and level-up  
+✔️ changes are stored to your browser's `local storage`  
+
 # leaderboard-cards
 
 ![how to use cards](/README/cards.gif)
