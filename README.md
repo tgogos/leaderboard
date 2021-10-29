@@ -5,12 +5,23 @@
  - Try them both online at:
    - [gogos.me/leaderboard/](https://gogos.me/leaderboard/)
    - [gogos.me/leaderboard-cards/](https://gogos.me/leaderboard-cards/)
+   - alternative codepen links: [leaderboard](https://codepen.io/tgogos/full/qBaEJaa) / [leaderboard-cards](https://codepen.io/tgogos/full/jOMrvmg)
 
 ![overview](/README/overview.gif)
+
+✔️ create a class leaderboard by adding names / scores in a few seconds  
+✔️ change the score by adding or removing points with the appropriate buttons  
+✔️ see the live updates as the players compete and level-up  
+✔️ changes are stored to your browser's `local storage`  
 
 # leaderboard-cards
 
 ![how to use cards](/README/cards.gif)
+
+✔️ add lucky cards that give extra points (or the opposite)  
+✔️ they are randomly placed whenever you refresh the page  
+✔️ press the button to shuffle them a little bit  
+✔️ when you think its needed, ask the user to pick one card  
 
 <br>
 <br>
@@ -63,3 +74,8 @@ Use the <kbd>🔗</kbd> button, copy the link created and share it. The current 
 ```
 https://gogos.me/leaderboard/?q=JTVCJTdCJTIyaWNvbiUyMiUzQSUyMiVGMCU5RiU5MCU5MiUyMiUyQyUyMm5pY2tuYW1lJTIyJTNBJTIyR3JlZW4lMjBNb25rZXklMjIlMkMlMjJzY29yZSUyMiUzQSUyMjE0JTIyJTdEJTJDJTdCJTIyaWNvbiUyMiUzQSUyMiVGMCU5RiVBNiU4RSUyMiUyQyUyMm5pY2tuYW1lJTIyJTNBJTIyT3JhbmdlJTIwSWd1YW5hJTIyJTJDJTIyc2NvcmUlMjIlM0ElMjIxMyUyMiU3RCUyQyU3QiUyMmljb24lMjIlM0ElMjIlRjAlOUYlQTYlOUMlMjIlMkMlMjJuaWNrbmFtZSUyMiUzQSUyMlB1cnBsZSUyMFBhcnJvdCUyMiUyQyUyMnNjb3JlJTIyJTNBJTIyMTIlMjIlN0QlMkMlN0IlMjJpY29uJTIyJTNBJTIyJUYwJTlGJTkwJTlGJTIyJTJDJTIybmlja25hbWUlMjIlM0ElMjJCbHVlJTIwQmFycmFjdWRhJTIyJTJDJTIyc2NvcmUlMjIlM0ElMjIxMCUyMiU3RCUyQyU3QiUyMmljb24lMjIlM0ElMjIlRjAlOUYlOTAlODYlMjIlMkMlMjJuaWNrbmFtZSUyMiUzQSUyMlJlZCUyMEphZ3VhciUyMiUyQyUyMnNjb3JlJTIyJTNBJTIyOSUyMiU3RCUyQyU3QiUyMmljb24lMjIlM0ElMjIlRjAlOUYlOTAlOEQlMjIlMkMlMjJuaWNrbmFtZSUyMiUzQSUyMlNpbHZlciUyMFNuYWtlJTIyJTJDJTIyc2NvcmUlMjIlM0ElMjI4JTIyJTdEJTVE
 ```
+
+# Libraries used
+
+ - jQuery: [jquery.com](https://jquery.com/)
+ - isotope.js: [isotope.metafizzy.co](https://isotope.metafizzy.co/)
