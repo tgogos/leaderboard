@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Leaderboard Cards</title>
+	<script type="text/javascript" src="jquery-3.5.1.min.js"></script>
+<style type="text/css">
+html, body, div, figure, p, h1, h2, ul, li, input, button, textarea {margin:0; padding:0; box-sizing: border-box; font-family: sans-serif;}
+body {background-color: #9b8975; box-sizing: content-box; max-width: 1400px; margin: 0 auto;}
+h1 {padding:30px 0; text-align: center; font-size: 50px; color: #fff8dc;}
+.leaderboard {list-style: none;}
+.leaderboard .card {padding: 0; width: 20%; height: 400px; overflow: hidden; position: relative;}
+.leaderboard .card .card-box {height: 100%; padding: 10px;}
+.leaderboard .card .card-box .card-content {position: relative; background-color: #2d3e50; height: 100%; text-align: center; overflow: hidden;}
+.leaderboard .card .card-box .card-content .card-cover {background: #5e4933; position: absolute; top: 0; left: 0; width: 100%; height: 100%; transition: left 0.4s ease-out; cursor: pointer;}
+.leaderboard .card .card-box .card-content.open .card-cover { left: -100%; }
+.leaderboard .card .card-box .card-content .card-cover .number {font-size: 10vh; line-height: 10vh; top: calc(50% - 5vh); position: absolute; left: 0; width: 100%; color: #fff8dc}
+.leaderboard .card .card-box .icon {font-size: 75px; line-height: 120px; background: #fff8dc; border-radius: 50%; width: 120px; text-align: center; display: inline-block; margin: 35px 0 35px 0;}
+.leaderboard .card .card-box .info {color: #cccccc; font-size: 1.7vh; padding: 25px; font-weight: 700;}
+.leaderboard .card .score {font-size: 50px; line-height: 70px; background: #4a5f75; color: #fff; width: 100%;}
+.leaderboard .card .score.red    {background: #dc3546; }
+.leaderboard .card .score.green  {background: #29a744; }
+.leaderboard .card .score.yellow {background: #fec107; color: #735d1a; }
+
+.add-card {position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; border-radius: 50%; background: #17a2b9; line-height: 50px; text-align: center; font-size: 40px; color: #fff; cursor: pointer;}
+.add-card-popup {display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; background-color: rgb(0 0 0 / 70%);}
+body.show-add-card .add-card-popup {display: block;}
+body.show-add-card {overflow: hidden;}
+.add-card-popup .box {display: inline-block; height: 500px; width: 500px; background: #353a40; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 6px dashed #fff8dc; text-align:center;}
+.add-card-popup .box .random-icon {width: 200px; height: 200px; font-size: 100px; line-height: 200px; background: #fff; display: inline-block; border-radius: 50%; margin: 25px 0; border: none; padding: 0; text-align: center; color: #000;}
+.add-card-popup .box input {height: 60px; line-height: 50px; font-size: 50px; border: none; background: #9b8975; color: #fff; text-align: center; width: 95%; margin-bottom: 10px;}
+.add-card-popup .box input::-webkit-input-placeholder {color: #7d6c59;}
+.add-card-popup .box #score {width: 250px;}
+.add-card-popup .box button {cursor: pointer; text-align: center; position: absolute; bottom: 0; width: 50%; height: 60px; border: none; font-size: 25px; font-weight: 700; color: #fff;} 
+.add-card-popup .box button.ok {right: 0; background: #29a744;}
+.add-card-popup .box button.cancel {left: 0; background: #1b252f;}
+
+.edit {position: fixed; bottom: 30px; right: 90px; width: 50px; height: 50px; line-height: 50px; text-align: center; font-size: 40px; color: #fff; cursor: pointer;}
+.edit-popup {display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; background-color: rgb(0 0 0 / 70%);}
+body.show-edit .edit-popup {display: block;}
+body.show-edit {overflow: hidden;}
+.edit-popup .box {display: inline-block; height: 500px; width: 500px; background: #353a40; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 6px dashed #fff8dc; text-align:center;}
+.edit-popup .box textarea {width: 100%; background: #353a40; box-sizing: border-box; font-size: 20px; color: #fff; border: none; padding: 15px; height: calc(100% - 60px);}
+.edit-popup .box button {cursor: pointer; text-align: center; position: absolute; bottom: 0; width: 50%; height: 60px; border: none; font-size: 25px; font-weight: 700; color: #fff;} 
+.edit-popup .box button.ok {right: 0; background: #29a744;}
+.edit-popup .box button.cancel {left: 0; background: #1b252f;}
+
+.link {position: fixed; bottom: 30px; left: 30px; width: 50px; height: 50px; line-height: 50px; text-align: center; font-size: 40px; color: #fff; cursor: pointer;}
+.link-popup {display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; background-color: rgb(0 0 0 / 70%);}
+body.show-link .link-popup {display: block;}
+body.show-link {overflow: hidden;}
+.link-popup .box {display: inline-block; height: 500px; width: 500px; background: #353a40; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 6px dashed #fff8dc; text-align:center;}
+.link-popup .box textarea {width: 100%; background: #353a40; box-sizing: border-box; font-size: 20px; color: #fff; border: none; padding: 15px; height: calc(100% - 60px);}
+.link-popup .box textarea::selection {background: #ccc;}
+.link-popup .box button {cursor: pointer; text-align: center; position: absolute; bottom: 0; width: 50%; height: 60px; border: none; font-size: 25px; font-weight: 700; color: #fff;} 
+.link-popup .box button.close {left: 0; background: #1b252f; width: 100%;}
+
+.shuffle {position: fixed; bottom: 30px; left: 90px; width: 50px; height: 50px; line-height: 50px; text-align: center; font-size: 40px; color: #fff; cursor: pointer;}
+
+@media (min-width: 360px) {
+	.leaderboard .card {width: 100%;}
+}
+
+/* Small devices (landscape phones, 576px and up)*/
+@media (min-width: 576px) {
+	.leaderboard .card {width: 50%;}
+}
+
+ /*Medium devices (tablets, 768px and up)*/
+@media (min-width: 768px) {
+	.leaderboard .card {width: 33.333%;}
+}
+
+ /*Large devices (desktops, 992px and up)*/
+@media (min-width: 992px) {
+	.leaderboard .card {width: 25%;}
+}
+
+ /*Extra large devices (large desktops, 1200px and up)*/
+@media (min-width: 1200px) {
+	.leaderboard .card {width: 20%;}
+}
+</style>
+</head>
+<body>
+	<h1 contenteditable="true">Leaderboard Cards</h1>
+	<ul class="leaderboard">
+		<!-- place for cards / isotope plugin -->
+	</ul>
+	<div class="add-card-popup">
+		<div class="box">
+			<input type="text" id="rand-icon" class="random-icon" value="🦊">
+			<br>
+			<input type="text" id="score" placeholder="score">
+			<br>
+			<input type="text" id="info" size="15" placeholder="info">
+			<br>
+			<button class="cancel">CANCEL</button>
+			<button class="ok">OK</button>
+		</div>
+	</div>
+	<div class="edit-popup">
+		<div class="box">
+			<textarea id="tarea"></textarea>
+			<button class="cancel">CANCEL</button>
+			<button class="ok">OK</button>
+		</div>
+	</div>
+	<div class="link-popup">
+		<div class="box">
+			<textarea id="tarea-link"></textarea>
+			<button class="close">CLOSE</button>
+		</div>
+	</div>
+	
+
+	<div class="add-card">+</div>
+	<div class="edit">📋</div>
+	<div class="shuffle">🃏</div>
+	<div class="link">🔗</div>
+
+
+<script type="text/javascript" src="isotope-v3.0.6.pkgd.min.js"></script>
+<script type="text/javascript">
+var leaderboard_iso = null;
+var local_storage_available = false;
+var data            = [];
+var minusPressed    = false;
+var plusPressed     = false;
+var emojis          = "🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯 🦁 🐮 🐷 🐽 🐸 🐵 🙈 🙉 🙊 🐒 🐔 🐧 🐦 🐤 🐣 🐥 🦆 🦅 🦉 🦇 🐺 🐗 🐴 🦄 🐝 🐛 🦋 🐌 🐞 🐜 🦟 🦗 🕷 🕸 🦂 🐢 🐍 🦎 🦖 🦕 🐙 🦑 🦐 🦞 🦀 🐡 🐠 🐟 🐬 🐳 🐋 🦈 🐊 🐅 🐆 🦓 🦍 🦧 🐘 🦛 🦏 🐪 🐫 🦒 🦘 🐃 🐂 🐄 🐎 🐖 🐏 🐑 🦙 🐐 🦌 🐕 🐩 🦮 🐕‍🦺 🐈 🐓 🦃 🦚 🦜 🦢 🦩 🐇 🦝 🦨 🦡 🦦 🦥 🐁 🐀 🦔".split(" ");
+var template        = `
+<li class="card">
+	<div class="card-box">
+	<div class="card-content">
+		<div class="card-cover"> <p class="number"></p> </div>
+		<p class="icon">{{icon}}</p>
+		<p class="score">{{score}}</p>
+		<p class="info">{{info}}</p>
+	</div>
+	</div>
+</li>
+`;
+
+$( document ).ready(function() {
+
+	// check if local storage is available
+	// updates `local_storage_available` variable
+	test_local_storage();
+
+	// some button handlers...
+	initialize_basic_btn_listeners();
+
+
+	// intialize isotope plugin
+	leaderboard_iso = $('.leaderboard').isotope({
+		// options
+		itemSelector: '.card',
+	});
+	
+
+	// 1st step:
+	// check for data in "URLSearchParams"
+	// If the url has data in the query string
+	// give priority to this data
+	url = new URL((window.location.href));
+	query_string = url.searchParams.get("q");
+	if (query_string != null) {
+		decoded_str = decodeURIComponent(window.atob(query_string));
+		data = JSON.parse(decoded_str);
+
+		// save data to local storage
+		// refresh without data in the url
+		if (local_storage_available) {
+			localStorage.setItem('leaderboard_card_data', JSON.stringify(data));
+			window.location.href = [location.protocol, '//', location.host, location.pathname].join('');
+		}
+		return;
+	}
+
+	// 2nd step:
+	// check for data in the local storage
+	if (local_storage_available) {
+		data = JSON.parse(localStorage.getItem('leaderboard_card_data'));
+		
+		// add data to the UI
+		if (data != null) {
+			data = shuffleArray(data);
+			build_leaderboard_cards();
+			return;
+		} else {
+			data = [];
+		}
+	}
+
+	// 3rd step:
+	// initialize with the following hard-coded data[]
+	data = [
+			{icon: "🎁", score: "2",  info: "Congrats! You win 2 points"},
+			{icon: "🔥", score: "5",  info: "You're on fire! +5" },
+			{icon: "🙊", score: "-1",   info: "Whoever you choose loses 1 point" },
+			{icon: "🤯", score: "🤣🔁😠",   info: "Swap your score with someone else" },
+			{icon: "🥇", score: "-3",   info: "The leader loses 3 points" },
+		];
+	data = shuffleArray(data);
+	build_leaderboard_cards();
+});
+
+function sort_leaderboard(){
+	leaderboard_iso.isotope( 'updateSortData');
+	leaderboard_iso.isotope({ sortBy: "score", sortAscending : false });
+}
+
+function shuffle_leaderboard_cards(){
+	leaderboard_iso.isotope();
+	leaderboard_iso.isotope( 'shuffle' );
+}
+
+function add_card_numbers() {
+	$('.card-content .number').each(function(i, obj) {
+		$(this).text(++i);
+	});
+}
+
+function add_card_colors() {
+	$('.card-content .score').each(function(i, obj) {
+		parsed = parseInt( $(this).text() );
+		if (isNaN(parsed)) {
+			$(this).addClass("yellow");
+			$(this).removeClass("red");
+			$(this).removeClass("green");
+		} else if (parsed > 0) {
+			$(this).addClass("green");
+			$(this).removeClass("red");
+			$(this).removeClass("yellow");
+		} else if (parsed < 0) {
+			$(this).addClass("red");
+			$(this).removeClass("green");
+			$(this).removeClass("yellow");
+		}
+	});
+}
+
+
+
+function initialize_basic_btn_listeners() {
+
+	// check whether MINUS is being pressed
+	$(window).keydown(function(evt) {
+		if (evt.which == 109) { // minus
+			minusPressed = true;
+		}
+		}).keyup(function(evt) {
+		if (evt.which == 109) { // minus
+			minusPressed = false;
+		}
+	});
+
+	// check whether PLUS is being pressed
+	$(window).keydown(function(evt) {
+		if (evt.which == 107) { // plus
+			plusPressed = true;
+		}
+		}).keyup(function(evt) {
+		if (evt.which == 107) { // plus
+			plusPressed = false;
+		}
+	});
+	
+	// adding a new card listeners
+	//
+	$('.add-card').on('click',function(){
+		scroll_to_top_smooth();
+		$("body").toggleClass("show-add-card");
+		// pick random animal emoji and clear form
+		$('#rand-icon').val(emojis[getRandomInt(0,emojis.length)]);
+		$('#info').val("");
+		$('#score').val("");
+	});
+
+	$('.add-card-popup .cancel').on('click',function(){
+		$("body").toggleClass("show-add-card");
+	});
+
+	$('.add-card-popup .ok').on('click',function(){
+		var new_card = {
+			icon:  $('#rand-icon').val(),
+			info:  $('#info').val(),
+			score: $('#score').val()
+		};
+		data.push(new_card);
+		build_leaderboard_cards();
+		$("body").toggleClass("show-add-card");
+	});
+
+
+	// editing
+	// 
+	$('.edit').on('click',function(){
+		scroll_to_top_smooth();
+		$("body").toggleClass("show-edit");
+		// load data to textarea
+		data_str = "";
+		data.forEach(function(card) {
+			data_str = data_str + (card.icon + "," + card.score + "," + card.info + "\n");
+		});
+		$("#tarea").val(data_str);
+	});
+
+	$('.edit-popup .cancel').on('click',function(){
+		$("body").toggleClass("show-edit");
+	});
+
+	$('.edit-popup .ok').on('click',function(){
+		read_data_from_text( $('#tarea').val().trim() );
+		build_leaderboard_cards();
+		$("body").toggleClass("show-edit");
+	});
+
+
+	// link sharing
+	// 
+	$('.link').on('click',function(){
+		scroll_to_top_smooth();
+		$("body").toggleClass("show-link");
+		// load data to textarea
+		$("#tarea-link").val(generate_share_link());
+		$('#tarea-link').select();
+	});
+
+	$('.link-popup .close').on('click',function(){
+		$("body").toggleClass("show-link");
+	});
+
+
+	// shuffle
+	//
+	$('.shuffle').on('click',function(){
+		shuffle_leaderboard_cards();
+	});
+}
+
+
+
+function initialize_card_btn_listeners() {
+	$('.card .card-cover').on('click',function(){
+		$(this).parent().toggleClass("open");
+		if (plusPressed) {
+			$(this).parent().children('.icon').text(emojis[getRandomInt(0,emojis.length)]);
+			$(this).parent().children('.score').removeClass("red").removeClass("yellow").addClass("green").text(10);
+			$(this).parent().children('.info').text("Συγχαρητήρια! Κέρδισες 10 βαθμούς");
+		}
+		if (minusPressed) {
+			$(this).parent().children('.icon').text(emojis[getRandomInt(0,emojis.length)]);
+			$(this).parent().children('.score').addClass("red").removeClass("yellow").removeClass("green").text(-10);
+			$(this).parent().children('.info').text("Ατυχία! Μόλις έχασες 10 βαθμούς");
+		}
+	});
+
+	// // +/- points buttons
+	// // also updates data[]
+	// $('.point-btn').on('click', async function(event){
+	// 	event.stopPropagation();
+	// 	var $li            = $(this).parent().parent();
+	// 	var $score         = $li.find('.score');
+	// 	var current_score  = parseInt( $score.text() );
+	// 	var points_clicked = parseInt($(this).attr('data-points-value'));
+	// 	var target_score   = current_score + points_clicked;
+
+	// 	// update UI
+	// 	if (target_score > current_score) {
+	// 		for (i=current_score ; i<=target_score ; i++) {
+	// 			$score.text(i);
+	// 			await sleep(150);
+	// 		}
+	// 	} else {
+	// 		for (i=current_score ; i>=target_score ; i--) {
+	// 			$score.text(i);
+	// 			await sleep(150);
+	// 		}
+	// 	}
+	// 	sort_leaderboard();
+
+	// 	// update data[]
+	// 	data.forEach(function(card) {
+	// 		if ((card.nickname == $li.find('.nickname').text()) && (card.icon == $li.find('.icon').text())) {
+	// 			card.score = target_score;
+	// 		}
+	// 	})
+	// 	// save data to local storage
+	// 	localStorage.setItem('leaderboard_card_data', JSON.stringify(data));
+	// });
+}
+
+function build_leaderboard_cards() {
+	// remove all current list items
+	$('.leaderboard').empty();
+
+	if (data.length == 0) return;
+
+	data = shuffleArray(data);
+
+	// append all card-list-items
+	data.forEach(function(card) {
+		$('.leaderboard').append(
+			template.replace(/{{icon}}/gm,card.icon)
+					.replace(/{{info}}/gm,card.info)
+					.replace(/{{score}}/gm,card.score));
+	})
+
+	// reload isotope
+	leaderboard_iso.isotope('reloadItems');
+	add_card_numbers();
+	add_card_colors();
+
+	// save data to local storage
+	localStorage.setItem('leaderboard_card_data', JSON.stringify(data));
+
+	// add button listeners for score +/-
+	initialize_card_btn_listeners();
+	// sort_leaderboard();
+	// shuffle_leaderboard_cards();
+	leaderboard_iso.isotope();
+}
+
+function read_data_from_text(data_str) {
+	data = [];
+	if (data_str == "") {return;}
+	var lines = data_str.split('\n');
+	lines.forEach(function(line) {
+		tokens = line.split(',');
+		data.push({
+			icon:   tokens[0],
+			score:  tokens[1],
+			info:   tokens[2]
+		});
+	});
+}
+
+
+
+
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * Returns a random number between min (inclusive) and max (exclusive)
+ */
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+/**
+ * Returns a random integer between min (inclusive) and max (inclusive).
+ * The value is no lower than min (or the next integer greater than min
+ * if min isn't an integer) and no greater than max (or the next integer
+ * lower than max if max isn't an integer).
+ * Using Math.round() will give you a non-uniform distribution!
+ */
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function generate_share_link() {
+	// encode to BASE64 the data object
+	base64_str = btoa(encodeURIComponent(JSON.stringify(data)));
+
+	share_url = new URL( [location.protocol, '//', location.host, location.pathname].join('') );
+	share_url.searchParams.append("q",base64_str)
+	return share_url.href;
+}
+
+function scroll_to_top_smooth() {
+	window.scrollTo({
+		top: 0,
+		// behavior: 'smooth'
+	});
+}
+
+function test_local_storage(){
+    var test = 'test';
+    try {
+        localStorage.setItem(test, test);
+        localStorage.removeItem(test);
+        local_storage_available = true;
+    } catch(e) {
+        local_storage_available = false;
+    }
+}
+
+/* Randomize array in-place using Durstenfeld shuffle algorithm */
+function shuffleArray(array) {
+	for (var i = array.length - 1; i > 0; i--) {
+		var j = Math.floor(Math.random() * (i + 1));
+		var temp = array[i];
+		array[i] = array[j];
+		array[j] = temp;
+	}
+	return array;
+}
+</script>
+</body>
+</html>
