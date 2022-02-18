@@ -7,9 +7,11 @@
 	<script type="text/javascript" src="jquery-3.5.1.min.js"></script>
 <style type="text/css">
 html, body, div, figure, p, h1, h2, ul, li, input, button, textarea {margin:0; padding:0; box-sizing: border-box; font-family: sans-serif;}
-body {background-color: #9b8975; padding: 0 20%;}
+body {background-color: #9b8975; }
 h1 {padding:30px 0; text-align: center; font-size: 50px; color: #fff8dc;}
-.leaderboard {list-style: none;}
+
+
+.leaderboard {list-style: none; width: 100%; height: 100%;}
 .leaderboard .person {background-color: #2d3e50; padding: 0 0 0 70px; width: 100%; height: 70px; margin-bottom: 12px; overflow: hidden; position: relative;}
 .leaderboard .person .icon {position: absolute; top: 0; left: 0; font-size: 50px; line-height: 70px; background: #fff8dc;}
 .leaderboard .person .nickname {padding: 0 0 0 10px; font-size: 30px; line-height: 70px; color: #fff;}
@@ -23,6 +25,14 @@ h1 {padding:30px 0; text-align: center; font-size: 50px; color: #fff8dc;}
 .leaderboard .person .point-btns .point-btn-1 {background: #5ace72; color: #bef5ca;}
 .leaderboard .person .point-btns .point-btn-2 {background: #3dc159; color: #a0efb1;}
 .leaderboard .person .point-btns .point-btn-5 {background: #29a744; color: #a0efb1; border-right: 2px solid #1e9237;}
+
+
+/* leaderboard: details view */
+.lb-box { padding: 0 20%; width:100%; }
+
+/* leaderboard: list view */
+.lb-box.list { overflow-y: hidden; padding:0; padding-bottom: 90px; }
+.lb-box.list .leaderboard .person { width: 600px; margin: 6px 12px;}
 
 .add-person {position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; border-radius: 50%; background: #17a2b9; line-height: 50px; text-align: center; font-size: 40px; color: #fff; cursor: pointer;}
 .add-person-popup {display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; background-color: rgb(0 0 0 / 70%);}
@@ -56,13 +66,30 @@ body.show-link {overflow: hidden;}
 .link-popup .box textarea::selection {background: #ccc;}
 .link-popup .box button {cursor: pointer; text-align: center; position: absolute; bottom: 0; width: 50%; height: 60px; border: none; font-size: 25px; font-weight: 700; color: #fff;} 
 .link-popup .box button.close {left: 0; background: #1b252f; width: 100%;}
+
+
+.view-style {position: fixed; bottom: 30px; left: 90px; width: 50px; height: 50px; cursor: pointer; padding: 5px;}
+.vs {display: block; background-color: #cbbdae; position: absolute; transition: all 0.25s ease;} 
+.vs {width: 40px; height: 7px;}
+.vs-1 {top: 5px; left: 5px;}
+.vs-2 {top: 16px; right: 5px;}
+.vs-3 {bottom: 16px; left: 5px;}
+.vs-4 {bottom: 5px; right: 5px;}
+
+.list .vs {width: 18px; height: 18px;}
+.list .vs-1 {top: 5px;}
+.list .vs-2 {top: 5px;}
+.list .vs-3 {bottom: 5px;}
+.list .vs-4 {bottom: 5px;}
 </style>
 </head>
 <body>
-	<h1 contenteditable="true">Leaderboard</h1>
-	<ul class="leaderboard">
-		<!-- place for persons / isotope plugin -->
-	</ul>
+	<h1 contenteditable="true" class="lb-header">Leaderboard</h1>
+	<div class="lb-box">
+		<ul class="leaderboard">
+			<!-- place for persons / isotope plugin -->
+		</ul>
+	</div>	
 	<div class="add-person-popup">
 		<div class="box">
 			<input type="text" id="rand-icon" class="random-icon" value="🦊">
@@ -93,6 +120,12 @@ body.show-link {overflow: hidden;}
 	<div class="add-person">+</div>
 	<div class="edit">📋</div>
 	<div class="link">🔗</div>
+	<div class="view-style list">
+		<div class="vs vs-1"></div>
+		<div class="vs vs-2"></div>
+		<div class="vs vs-3"></div>
+		<div class="vs vs-4"></div>
+	</div>
 
 
 <script type="text/javascript" src="isotope-v3.0.6.pkgd.min.js"></script>
@@ -251,6 +284,51 @@ function initialize_basic_btn_listeners() {
 
 	$('.link-popup .close').on('click',function(){
 		$("body").toggleClass("show-link");
+	});
+
+
+	// view style
+	// 
+	$('.view-style').on('click',function() {
+		
+		scroll_to_top_smooth();
+		$(".view-style").toggleClass("list"); // change the button state
+		
+		// check the state from the leaderboard wrapper box
+		// destroy, recreate, sort the appropriate isotope instance
+		// 
+		if ( $(".lb-box").hasClass("list") ) {
+
+			// has list -> change to details view
+			$(".lb-box").toggleClass("list");
+			leaderboard_iso.isotope('destroy');
+			leaderboard_iso = $('.leaderboard').isotope({
+				// options
+				itemSelector: '.person',
+				layoutMode: 'vertical',
+				getSortData: {
+					nickname: '.nickname',
+					score: '.score parseInt'
+				}
+			});
+			sort_leaderboard();
+		}
+		else {
+			// has details -> change to list view
+			$(".lb-box").toggleClass("list").height(window.innerHeight - $('.lb-header').outerHeight() -90);
+
+			leaderboard_iso.isotope('destroy');
+			leaderboard_iso = $('.leaderboard').isotope({
+				// options
+				itemSelector: '.person',
+				layoutMode: 'fitColumns',
+				getSortData: {
+					nickname: '.nickname',
+					score: '.score parseInt'
+				}
+			});
+			sort_leaderboard();
+		}
 	});
 }
 
