@@ -58,6 +58,8 @@ body.show-link {overflow: hidden;}
 
 .shuffle {position: fixed; bottom: 30px; left: 90px; width: 50px; height: 50px; line-height: 50px; text-align: center; font-size: 40px; color: #fff; cursor: pointer;}
 
+.refresh {position: fixed; bottom: 30px; left: 140px; width: 50px; height: 50px; line-height: 50px; text-align: center; font-size: 40px; color: #fff; cursor: pointer;}
+
 @media (min-width: 360px) {
 	.leaderboard .card {width: 100%;}
 }
@@ -118,6 +120,7 @@ body.show-link {overflow: hidden;}
 	<div class="add-card">+</div>
 	<div class="edit">📋</div>
 	<div class="shuffle">🃏</div>
+	<div class="refresh">🔁</div>
 	<div class="link">🔗</div>
 
 
@@ -337,6 +340,13 @@ function initialize_basic_btn_listeners() {
 	//
 	$('.shuffle').on('click',function(){
 		shuffle_leaderboard_cards();
+	});
+
+
+	// refresh
+	//
+	$('.refresh').on('click',function(){
+		build_leaderboard_cards();
 	});
 }
 
