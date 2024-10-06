@@ -353,12 +353,12 @@ function initialize_person_btn_listeners() {
 		if (target_score > current_score) {
 			for (i=current_score ; i<=target_score ; i++) {
 				$score.text(i);
-				await sleep(150);
+				await sleep(40);
 			}
 		} else {
 			for (i=current_score ; i>=target_score ; i--) {
 				$score.text(i);
-				await sleep(150);
+				await sleep(40);
 			}
 		}
 		sort_leaderboard();
