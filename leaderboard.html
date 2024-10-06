@@ -12,7 +12,7 @@ h1 {padding:30px 0; text-align: center; font-size: 50px; color: #fff8dc;}
 
 
 .leaderboard {list-style: none; width: 100%; height: 100%;}
-.leaderboard .person {background-color: #2d3e50; padding: 0 0 0 70px; width: 100%; height: 70px; margin-bottom: 12px; overflow: hidden; position: relative;}
+.leaderboard .person {background-color: #2d3e50; padding: 0 0 0 70px; width: 100%; height: 70px; margin-bottom: 12px; overflow: hidden; position: relative; user-select: none;}
 .leaderboard .person .icon {position: absolute; top: 0; left: 0; font-size: 50px; line-height: 70px; background: #fff8dc;}
 .leaderboard .person .nickname {padding: 0 0 0 10px; font-size: 30px; line-height: 70px; color: #fff;}
 .leaderboard .person .score {position: absolute; top: 0; right: 0; font-size: 50px; line-height: 70px; background: #dc3546; color: #fff; width: 120px; text-align: center; z-index: 10; cursor: pointer;}
@@ -34,7 +34,7 @@ h1 {padding:30px 0; text-align: center; font-size: 50px; color: #fff8dc;}
 .lb-box.list { overflow-y: hidden; padding:0; padding-bottom: 90px; }
 .lb-box.list .leaderboard .person { width: 600px; margin: 6px 12px;}
 
-.add-person {position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; border-radius: 50%; background: #17a2b9; line-height: 50px; text-align: center; font-size: 40px; color: #fff; cursor: pointer;}
+.add-person {position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; border-radius: 50%; background: #17a2b9; line-height: 50px; text-align: center; font-size: 40px; color: #fff; cursor: pointer; user-select: none;}
 .add-person-popup {display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; background-color: rgb(0 0 0 / 70%);}
 body.show-add-person .add-person-popup {display: block;}
 body.show-add-person {overflow: hidden;}
@@ -47,7 +47,7 @@ body.show-add-person {overflow: hidden;}
 .add-person-popup .box button.ok {right: 0; background: #29a744;}
 .add-person-popup .box button.cancel {left: 0; background: #1b252f;}
 
-.edit {position: fixed; bottom: 30px; right: 90px; width: 50px; height: 50px; line-height: 50px; text-align: center; font-size: 40px; color: #fff; cursor: pointer;}
+.edit {position: fixed; bottom: 30px; right: 90px; width: 50px; height: 50px; line-height: 50px; text-align: center; font-size: 40px; color: #fff; cursor: pointer; user-select: none;}
 .edit-popup {display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; background-color: rgb(0 0 0 / 70%);}
 body.show-edit .edit-popup {display: block;}
 body.show-edit {overflow: hidden;}
@@ -57,7 +57,7 @@ body.show-edit {overflow: hidden;}
 .edit-popup .box button.ok {right: 0; background: #29a744;}
 .edit-popup .box button.cancel {left: 0; background: #1b252f;}
 
-.link {position: fixed; bottom: 30px; left: 30px; width: 50px; height: 50px; line-height: 50px; text-align: center; font-size: 40px; color: #fff; cursor: pointer;}
+.link {position: fixed; bottom: 30px; left: 30px; width: 50px; height: 50px; line-height: 50px; text-align: center; font-size: 40px; color: #fff; cursor: pointer; user-select: none;}
 .link-popup {display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; background-color: rgb(0 0 0 / 70%);}
 body.show-link .link-popup {display: block;}
 body.show-link {overflow: hidden;}
@@ -68,7 +68,7 @@ body.show-link {overflow: hidden;}
 .link-popup .box button.close {left: 0; background: #1b252f; width: 100%;}
 
 
-.view-style {position: fixed; bottom: 30px; left: 90px; width: 50px; height: 50px; cursor: pointer; padding: 5px;}
+.view-style {position: fixed; bottom: 30px; left: 90px; width: 50px; height: 50px; cursor: pointer; padding: 5px; user-select: none;}
 .vs {display: block; background-color: #cbbdae; position: absolute; transition: all 0.25s ease;} 
 .vs {width: 40px; height: 7px;}
 .vs-1 {top: 5px; left: 5px;}
