@@ -86,6 +86,22 @@ body.show-link {overflow: hidden;}
 .list .vs-2 {top: 5px;}
 .list .vs-3 {bottom: 5px;}
 .list .vs-4 {bottom: 5px;}
+
+/* swap mode visuals */
+body.swap-mode::before {content:""; position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.45); z-index: 5; pointer-events: none; transition: background 0.25s ease;}
+.swap-hint {position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color:#fff; padding: 10px 16px; border-radius: 20px; font-weight: 700; z-index: 30; display: none;}
+body.swap-mode .swap-hint {display: inline-block; animation: hint-bounce 1.4s ease-in-out infinite;}
+.swap.active {color: #29a744; animation: btn-bounce 1.4s ease-in-out infinite;}
+
+@keyframes hint-bounce {
+	0%, 100% { transform: translate(-50%, 0); }
+	50% { transform: translate(-50%, -6px); }
+}
+
+@keyframes btn-bounce {
+	0%, 100% { transform: translateY(0); }
+	50% { transform: translateY(-4px); }
+}
 </style>
 </head>
 <body>
@@ -132,6 +148,7 @@ body.show-link {overflow: hidden;}
 		<div class="vs vs-3"></div>
 		<div class="vs vs-4"></div>
 	</div>
+	<div class="swap-hint">Swap mode: select 2 players, then press 🔄 (Esc to cancel)</div>
 
 
 <script type="text/javascript" src="isotope-v3.0.6.pkgd.min.js"></script>
@@ -231,6 +248,7 @@ function enter_swap_mode(){
 	swap_selected = [];
 	$('.swap').addClass('active');
 	$('.leaderboard .person').removeClass('selected');
+	$('body').addClass('swap-mode');
 }
 
 function exit_swap_mode(){
@@ -238,6 +256,7 @@ function exit_swap_mode(){
 	swap_selected = [];
 	$('.swap').removeClass('active');
 	$('.leaderboard .person').removeClass('selected');
+	$('body').removeClass('swap-mode');
 }
 
 function perform_swap(){
