@@ -124,7 +124,7 @@ body.show-link {overflow: hidden;}
 
 	<div class="add-person">+</div>
 	<div class="edit">📋</div>
-	<div class="swap">↔️</div>
+	<div class="swap">🔄</div>
 	<div class="link">🔗</div>
 	<div class="view-style list">
 		<div class="vs vs-1"></div>
@@ -242,21 +242,22 @@ function exit_swap_mode(){
 
 function perform_swap(){
 	if (swap_selected.length !== 2) return;
-	var keyA = swap_selected[0].split('|');
-	var keyB = swap_selected[1].split('|');
-	var iconA = keyA[0], nameA = keyA[1];
-	var iconB = keyB[0], nameB = keyB[1];
-	var scoreA = null, scoreB = null;
-	// find persons and swap scores
-	data.forEach(function(person){
-		if (person.icon === iconA && person.nickname === nameA) {
-			scoreA = parseInt(person.score);
-		}
-		if (person.icon === iconB && person.nickname === nameB) {
-			scoreB = parseInt(person.score);
-		}
-	});
-	if (scoreA === null || scoreB === null) return;
+	var $selected = $('.leaderboard .person.selected');
+	if ($selected.length !== 2) return;
+	var $a = $selected.eq(0);
+	var $b = $selected.eq(1);
+	var scoreA = parseInt($a.find('.score').text());
+	var scoreB = parseInt($b.find('.score').text());
+
+	// swap DOM texts
+	$a.find('.score').text(scoreB);
+ 	$b.find('.score').text(scoreA);
+
+	// update data[] for persistence
+	var iconA = $a.find('.icon').text();
+	var nameA = $a.find('.nickname').text();
+	var iconB = $b.find('.icon').text();
+	var nameB = $b.find('.nickname').text();
 	data.forEach(function(person){
 		if (person.icon === iconA && person.nickname === nameA) {
 			person.score = scoreB;
@@ -265,16 +266,7 @@ function perform_swap(){
 			person.score = scoreA;
 		}
 	});
-	// update UI for the two persons
-	$('.leaderboard .person').each(function(){
-		var $p = $(this);
-		var key = $p.find('.icon').text() + '|' + $p.find('.nickname').text();
-		if (key === swap_selected[0] || key === swap_selected[1]) {
-			var updated = data.find(function(person){ return (person.icon + '|' + person.nickname) === key; });
-			if (updated) { $p.find('.score').text(updated.score); }
-		}
-	});
-	// persist and resort
+
 	localStorage.setItem('leaderboard_data', JSON.stringify(data));
 	sort_leaderboard();
 }
