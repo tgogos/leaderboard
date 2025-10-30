@@ -344,6 +344,24 @@ function initialize_basic_btn_listeners() {
 		}
 	});
 
+	// confirm popups on Enter key
+	$(document).on('keydown', function(e){
+		if (e.key === 'Enter' || e.keyCode === 13) {
+			// Add person: plain Enter submits
+			if ($('body').hasClass('show-add-person')) {
+				e.preventDefault();
+				$('.add-person-popup .ok').click();
+				return;
+			}
+			// Edit list: require Ctrl/Cmd + Enter to avoid breaking textarea newlines
+			if ($('body').hasClass('show-edit') && (e.ctrlKey || e.metaKey)) {
+				e.preventDefault();
+				$('.edit-popup .ok').click();
+				return;
+			}
+		}
+	});
+
 
 function initialize_person_btn_listeners() {
 	$('.person .score').on('click',function(){
