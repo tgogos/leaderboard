@@ -280,6 +280,33 @@ function initialize_basic_btn_listeners() {
 		// load data to textarea
 		$("#tarea-link").val(generate_share_link());
 		$('#tarea-link').select();
+		// attempt to copy to clipboard and show quick feedback
+		var shareText = $('#tarea-link').val();
+		var $closeBtn = $('.link-popup .close');
+		var originalText = $closeBtn.text();
+		function showCopiedFeedback(success){
+			$closeBtn.text(success ? 'COPIED ✓ — CLOSE' : 'COPY FAILED — CLOSE');
+			setTimeout(function(){ $closeBtn.text(originalText); }, 1500);
+		}
+		if (navigator.clipboard && navigator.clipboard.writeText) {
+			navigator.clipboard.writeText(shareText).then(function(){
+				showCopiedFeedback(true);
+			}).catch(function(){
+				try {
+					var successful = document.execCommand('copy');
+					showCopiedFeedback(!!successful);
+				} catch (err) {
+					showCopiedFeedback(false);
+				}
+			});
+		} else {
+			try {
+				var successful = document.execCommand('copy');
+				showCopiedFeedback(!!successful);
+			} catch (err) {
+				showCopiedFeedback(false);
+			}
+		}
 	});
 
 	$('.link-popup .close').on('click',function(){
